@@ -6,7 +6,7 @@ exports.getToken = function(idpUrl, tokenUrl, clientId, companyId, userId, priva
     let token = tokenCache.getToken(clientId, userId);
     if (!token) {
         let assertion = getSAMLAssertion(idpUrl, tokenUrl, clientId, userId, privateKey);
-        token = getAccessToken(tokenUrl, clientId, companyId, assertion);
+        token = getAccessToken(tokenUrl, clientId, companyId, userId, assertion);
         tokenCache.setToken(clientId, userId, token);
     }
     return token;
@@ -42,7 +42,7 @@ function getSAMLAssertion(idpUrl, tokenUrl, clientId, userId, privateKey) {
     return assertionResponse.text;
 }
 
-function getAccessToken(tokenUrl, clientId, companyId, assertion) {
+function getAccessToken(tokenUrl, clientId, companyId, userId, assertion) {
     let tokenResponse = httpClient.post(tokenUrl, {
         params: [{
             name: "grant_type",

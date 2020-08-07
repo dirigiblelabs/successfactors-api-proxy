@@ -6,7 +6,7 @@ var authProvider = require("successfactors-proxy/proxy/auth/provider");
 exports.execute = function(entity, parameters) {
 	var api = getBaseApi() + "/" + entity;
 	var httpResponse = httpClient.get(api, {
-		headers: [getAuthorizationHeader()],
+		headers: getHeaders(),
 		params: parameters
 	});
 	setHeaders(httpResponse);
@@ -16,7 +16,7 @@ exports.execute = function(entity, parameters) {
 exports.executePut = function(entity, payload, contentType) {
 	var api = getBaseApi() + "/" + entity;
 	var requestContentType = contentType ? contentType : "application/json";
-	var headers = [getAuthorizationHeader()];
+	var headers = getHeaders();
 	if (contentType === "application/json") {
 		headers.push(getAcceptJsonHeader());
 	}
@@ -33,7 +33,7 @@ exports.executePut = function(entity, payload, contentType) {
 exports.executePost = function(entity, payload, contentType) {
 	var api = getBaseApi() + "/" + entity;
 	var requestContentType = contentType ? contentType : "application/json";
-	var headers = [getAuthorizationHeader()];
+	var headers = getHeaders();
 	if (contentType === "application/json") {
 		headers.push(getAcceptJsonHeader());
 	}
@@ -50,7 +50,7 @@ exports.executePost = function(entity, payload, contentType) {
 exports.executeDelete = function(entity, parameters) {
 	var api = getBaseApi() + "/" + entity;
 	var httpResponse = httpClient.delete(api, {
-		headers: [getAuthorizationHeader()],
+		headers: getHeaders(),
 		params: parameters
 	});
 	setHeaders(httpResponse);
@@ -118,9 +118,9 @@ function getCSRFHeader() {
 function setCSRFHeader(response) {
 	if (!session.getAttribute("SFSF_CSRF_Header")) {
 		for (var i = 0; i < response.headers.length; i ++) {
-			if (response.headers[i].name === "Set-Cookie") {
+			if (response.headers[i].name === "X-CSRF-Token") {
 				var cookieValue = response.headers[i].value.split(";")[0];
-				session.setAttribute("X-CSRF-Token", cookieValue)
+				session.setAttribute("SFSF_CSRF_Header", cookieValue)
 				break;
 			}
 		}
