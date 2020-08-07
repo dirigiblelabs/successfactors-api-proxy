@@ -59,7 +59,7 @@ exports.executeDelete = function(entity, parameters) {
 };
 
 function getBaseApi() {
-	return "https://" + configProvider.getHost() + "/odata/v2";
+	return configProvider.getHost() + "/odata/v2";
 }
 
 function getHeaders() {
