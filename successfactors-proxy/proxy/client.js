@@ -1,5 +1,6 @@
 var httpClient = require("http/v4/client");
 var session = require("http/v4/session");
+var user = require("security/v4/user");
 var configProvider = require("successfactors-proxy/proxy/config/provider");
 var authProvider = require("successfactors-proxy/proxy/auth/provider");
 
@@ -77,9 +78,11 @@ function setHeaders(response) {
 }
 
 function getAuthorizationHeader() {
+	let userId = user.getName();
+	let authorizationHeader = authProvider.getAuthorizationHeader(userId);
 	return {
 		name: "Authorization",
-		value: authProvider.getAuthorizationHeader()
+		value: authorizationHeader
 	};
 }
 
